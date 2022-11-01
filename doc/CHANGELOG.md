@@ -10,6 +10,8 @@ The changelog is available [on GitHub][2].
 
 ## 0.1.0 *2022-11-01*
 
+  * Initial release of `AssignmentCUNY.cls`
+
   * Initial release of `ReportCUNY.cls`
 
 
