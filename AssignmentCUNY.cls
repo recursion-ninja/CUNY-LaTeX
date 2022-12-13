@@ -21,7 +21,7 @@ numbers=noenddot
 ]{scrreprt}%
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{AssignmentCUNY}[2022/06/10 v1.0.0 A LaTeX style CUNY assignments]
+\ProvidesPackage{AssignmentCUNY}[2022/06/10 v1.2.0 A LaTeX style CUNY assignments]
 %\PassOptionsToPackage{utf8}{inputenc}
 %\usepackage{inputenc}
 \RequirePackage{geometry}
@@ -75,6 +75,25 @@ top=20mm
 	\hspace{-\savedparfillskip}%
 }
 %----------------------------- Modify paragraph format -------------------------
+
+
+%----------------------------- Setup math modemodifications -------------------
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\RequirePackage{nicefrac}
+\RequirePackage{xspace}
+\let\oldfrac\frac% Store \frac
+\renewcommand{\frac}[2]{%
+        \mathchoice%
+        {\oldfrac{#1}{#2}}% display style
+        {\nicefrac{#1}{#2}}% text style
+        {\nicefrac{#1}{#2}}% script style
+        {\nicefrac{#1}{#2}}% script-script style
+}
+\newcommand{\Nats}{\ensuremath{\mathbb{N}}\xspace}
+\newcommand{\Ints}{\ensuremath{\mathbb{Z}}\xspace}
+%----------------------------- Setup math mode modifications -------------------
 
 
 %----------------------------- Other packages ----------------------------------
@@ -165,4 +184,3 @@ on\\[1cm]
 \section{#1}}%
 \newcommand{\SubProblem}[1]{\subsection{\HomeworkText{#1}}}%
 \newcommand{\SubSubProblem}[2]{\subsubsection{\HomeworkText{#1}}}%
-

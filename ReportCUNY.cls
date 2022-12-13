@@ -26,7 +26,7 @@ leqno,
 ]{article}%
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ReportCUNY}[2022/10/31 v1.0.1 A LaTeX style for reports of CUNY courses]
+\ProvidesPackage{ReportCUNY}[2022/10/31 v1.2.0 A LaTeX style for reports of CUNY courses]
 
 \PassOptionsToPackage{utf8}{inputenc}
 \RequirePackage{inputenc}
@@ -38,20 +38,22 @@ leqno,
 \RequirePackage{geometry}
 %
 %----------------------------- Report CUNY variables -------------------------%
-\global\let\VarCourseName\empty%%
-\global\let\VarCourseNumber\empty%%
-\global\let\VarCitationFile\empty%%
-\global\let\VarDateD\empty%%
-\global\let\VarDateM\empty%%
-\global\let\VarDateY\empty%%
-\global\let\VarDepartmentAbbrev\empty%%
-\global\let\VarDepartmentName\empty%%
-\global\let\VarInstitution\empty%%
-\global\let\VarInstructor\empty%%
+\global\let\VarAssetPath\empty%
+\global\let\VarCourseName\empty%
+\global\let\VarCourseNumber\empty%
+\global\let\VarCitationFile\empty%
+\global\let\VarDateD\empty%
+\global\let\VarDateM\empty%
+\global\let\VarDateY\empty%
+\global\let\VarDepartmentAbbrev\empty%
+\global\let\VarDepartmentName\empty%
+\global\let\VarInstitution\empty%
+\global\let\VarInstructor\empty%
 \global\let\VarStudent\empty%
 \global\let\VarSubtitle\empty%
 \global\let\VarTitle\empty%
 
+\global\let\VarAssetPath\relax
 \global\let\VarCourseName\relax
 \global\let\VarCourseNumber\relax
 \global\let\VarCitationFile\relax
@@ -66,6 +68,7 @@ leqno,
 \global\let\VarSubtitle\relax
 \global\let\VarTitle\relax
 
+\def\AssetPath#1{\def\VarAssetPath{#1}}
 \def\CourseName#1{\def\VarCourseName{#1}}
 \def\CourseNumber#1{\def\VarCourseNumber{#1}}
 \def\CitationFile#1{\def\VarCitationFile{#1}}
@@ -98,13 +101,44 @@ leqno,
 backend=biber,
 backref=true,
 style=numeric-comp
-}{biblatex}
-\RequirePackage{biblatex}
-%\addbibresource{\ReportCUNY@bibfile}
+}{biblatex}%
+\RequirePackage{biblatex}%
+%\addbibresource{\CitationFile}
+%\bibliography{\CitationFile}%
 %----------------------------- Setup biblatex-package options ------------------
 
 
-%----------------------------- Setup hyperlink options ------------------
+%----------------------------- Setup fancy page boarder  -----------------------
+\RequirePackage{background}
+\usetikzlibrary{calc}
+\SetBgAngle{0}
+\SetBgOpacity{1}
+\SetBgScale{1}
+\SetBgColor{black}
+\SetBgContents{%
+\begin{tikzpicture}[overlay,remember picture]
+\draw [line width=0.5mm,rounded corners=5mm,color=black]
+    ($ (current page.north west) + (0.5in,-0.5in) $)
+    rectangle
+    ($ (current page.south east) + (-0.5in,0.5in) $);
+\end{tikzpicture}
+}
+%----------------------------- Setup fancy page boarder  -----------------------
+
+
+%----------------------------- Setup fancy page numbering ----------------------
+\RequirePackage{lastpage}
+\RequirePackage{fancyhdr}
+\fancyhf{}
+\fancyhead[C]{}
+\fancyfoot[C]{\thepage\hspace{1mm}/\hspace{1mm}\pageref{LastPage}}
+\renewcommand{\headrulewidth}{0pt}
+\setlength{\footskip}{0.55in}
+\pagestyle{fancy}
+%----------------------------- Setup fancy page numbering ----------------------
+
+
+%----------------------------- Setup hyperlink options -------------------------
 \PassOptionsToPackage{%
 dvipsnames,
 svgnames,
@@ -130,44 +164,40 @@ citecolor          = LinkBlue,
 urlcolor           = LinkBlue
 }{hyperref}
 \RequirePackage{hyperref}
-%----------------------------- Setup hyperlink options  ------------------
+%----------------------------- Setup hyperlink options  -----------------------
 
 
-%----------------------------- Setup fancy page boarder  ------------------
-\RequirePackage{background}
-\usetikzlibrary{calc}
-%
-\SetBgAngle{0}
-\SetBgOpacity{1}
-\SetBgScale{1}
-\SetBgColor{black}
-\SetBgContents{%
-\begin{tikzpicture}[overlay,remember picture]
-\draw [line width=0.5mm,rounded corners=5mm,color=black]
-    ($ (current page.north west) + (0.5in,-0.5in) $)
-    rectangle
-    ($ (current page.south east) + (-0.5in,0.5in) $);
-\end{tikzpicture}
+%----------------------------- Augment paragraph intentation  -----------------
+\PassOptionsToPackage{%
+skip=.5\baselineskip%
+}{parskip}
+\RequirePackage{parskip}% http://ctan.org/pkg/parskip
+%----------------------------- Augment paragraph intentation  -----------------
+
+
+%----------------------------- Setup math modemodifications -------------------
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{amsthm}
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\RequirePackage{nicefrac}
+\RequirePackage{xspace}
+\let\oldfrac\frac% Store \frac
+\renewcommand{\frac}[2]{%
+\mathchoice%
+{\oldfrac{#1}{#2}}% display style
+{\nicefrac{#1}{#2}}% text style
+{\nicefrac{#1}{#2}}% script style
+{\nicefrac{#1}{#2}}% script-script style
 }
-%----------------------------- Setup fancy page boarder  ------------------
-
-
-%----------------------------- Setup fancy page numbering ------------------
-\RequirePackage{lastpage}
-\RequirePackage{fancyhdr}
-\fancyhf{}
-\fancyhead[C]{}
-\fancyfoot[C]{\thepage\hspace{1mm}/\hspace{1mm}\pageref{LastPage}}
-\renewcommand{\headrulewidth}{0pt}
-\setlength{\footskip}{0.55in}
-\pagestyle{fancy}
-%----------------------------- Setup fancy page numbering ------------------
+\newcommand{\Nats}{\ensuremath{\mathbb{N}}\xspace}
+\newcommand{\Ints}{\ensuremath{\mathbb{Z}}\xspace}
+\newcommand{\Qty}[1]{\textsf{\oldstylenums{\fontseries{m}\selectfont#1}}}
+%----------------------------- Setup math mode modifications -------------------
 
 
 %----------------------------- Other packages ----------------------------------
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{amsthm}
 \usepackage{array}
 \usepackage{calc}
 \usepackage{changepage}
@@ -204,6 +234,8 @@ urlcolor           = LinkBlue
 \newcommand{\FormatEntry}[1]{\hspace{0.25in}#1}
 \newcommand{\FormatLabel}[1]{\hspace{0.25in}\bfseries \textsc{#1}}
 \newcommand{\FormatTitle}[1]{\bfseries\slshape#1\/}
+
+\graphicspath{{\VarAssetPath}}
 
 \newcommand{\ReportTitlePage}{%
 \begin{titlepage}
@@ -271,7 +303,8 @@ urlcolor           = LinkBlue
 \ReportTitlePage%
 \setcounter{page}{1}
 \pagenumbering{arabic}% Always use Arabic numbering
-\doublespacing%         Always use *double* spacing outside of Back-matter
+\onehalfspacing%        Always use *1.5* spacing outside of Back-matter
+\sffamily%
 }
 
 \AtEndDocument%
