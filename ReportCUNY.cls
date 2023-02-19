@@ -26,13 +26,17 @@ leqno,
 ]{article}%
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{ReportCUNY}[2022/10/31 v1.2.0 A LaTeX style for reports of CUNY courses]
+\ProvidesPackage{ReportCUNY}[2023/02/18 v1.2.1 A LaTeX style for reports of CUNY courses]
+
+\RequirePackage{lmodern}
 
 \PassOptionsToPackage{utf8}{inputenc}
 \RequirePackage{inputenc}
 
-\PassOptionsToPackage{OT1}{fontenc}
+\PassOptionsToPackage{T1}{fontenc}
 \RequirePackage{fontenc}
+
+\renewcommand*\familydefault{\sfdefault}
 
 \PassOptionsToPackage{a4paper,left=0.75in,right=0.75in,top=0.75in,bottom=0.75in}{geometry}
 \RequirePackage{geometry}

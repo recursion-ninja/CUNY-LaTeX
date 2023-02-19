@@ -21,9 +21,18 @@ numbers=noenddot
 ]{scrreprt}%
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{AssignmentCUNY}[2022/06/10 v1.2.0 A LaTeX style CUNY assignments]
-%\PassOptionsToPackage{utf8}{inputenc}
-%\usepackage{inputenc}
+\ProvidesPackage{AssignmentCUNY}[2023/02/18 v1.2.1 A LaTeX style CUNY assignments]
+
+\RequirePackage{lmodern}
+
+\PassOptionsToPackage{utf8}{inputenc}
+\RequirePackage{inputenc}
+
+\PassOptionsToPackage{T1}{fontenc}
+\RequirePackage{fontenc}
+
+\renewcommand*\familydefault{\sfdefault}
+
 \RequirePackage{geometry}
 \geometry{%
 a4paper,
@@ -65,6 +74,14 @@ top=20mm
 %----------------------------- Setup table of contents -------------------------
 
 
+%----------------------------- Modify style of page numbering  -------------------------
+\addtokomafont{pagenumber}{\oldstylenums}
+\addtokomafont{chapterentrypagenumber}{\oldstylenums}
+\RedeclareSectionCommand[tocpagenumberformat=\oldstylenums]{section}
+\RedeclareSectionCommand[tocpagenumberformat=\oldstylenums]{subsection}
+%----------------------------- Modify style of page numbering -------------------------
+
+
 %----------------------------- Modify paragraph format -------------------------
 \newlength\savedparfillskip%
 \newcommand*{\saveparfillskip}[1]{\setlength{\savedparfillskip}{\dimexpr\parfillskip\relax}}
@@ -74,6 +91,10 @@ top=20mm
 	#2%
 	\hspace{-\savedparfillskip}%
 }
+\setlength{\abovedisplayskip}{1pt}
+\setlength{\belowdisplayskip}{1pt}
+\setlength{\abovedisplayshortskip}{1pt}
+\setlength{\belowdisplayshortskip}{1pt}
 %----------------------------- Modify paragraph format -------------------------
 
 
@@ -82,25 +103,50 @@ top=20mm
 \RequirePackage{amssymb}
 \RequirePackage{amsthm}
 \RequirePackage{nicefrac}
+\PassOptionsToPackage{%
+group-separator={,},
+number-mode=text
+}%
+{siunitx}
+\RequirePackage{siunitx}
 \RequirePackage{xspace}
+
+% Upgraded fraction representation
 \let\oldfrac\frac% Store \frac
 \renewcommand{\frac}[2]{%
-        \mathchoice%
-        {\oldfrac{#1}{#2}}% display style
-        {\nicefrac{#1}{#2}}% text style
-        {\nicefrac{#1}{#2}}% script style
-        {\nicefrac{#1}{#2}}% script-script style
+\mathchoice%
+{\oldfrac{#1}{#2}}% display style
+{\nicefrac{#1}{#2}}% text style
+{\nicefrac{#1}{#2}}% script style
+{\nicefrac{#1}{#2}}% script-script style
 }
+
+% Number Categories
 \newcommand{\Nats}{\ensuremath{\mathbb{N}}\xspace}
 \newcommand{\Ints}{\ensuremath{\mathbb{Z}}\xspace}
+\newcommand{\Rats}{\ensuremath{\mathbb{Q}}\xspace}
+
+% Logical connectives
+\newcommand{\ImpliesOne}{\ensuremath{\rightarrow}\xspace}
+\newcommand{\ImpliesTwo}{\ensuremath{\implies}\xspace}
+\newcommand{\ModelsOne}{\ensuremath{\vdash}\xspace}
+\newcommand{\ModelsTwo}{\ensuremath{\implies}\xspace}
+
+% Groupings
+\newcommand{\Parens}[1]{\ensuremath{\left(\;#1\;\right)}\xspace}
+\newcommand{\SetNote}[1]{\ensuremath{\left\{\;#1\;\right\}}\xspace}
+\newcommand{\IndexRange}[2]{\ensuremath{\texttt{{[}\,#1,\ #2\,{]}}}\xspace}
+\newcommand{\NumericRange}[2]{\ensuremath{\left[\,#1,\; #2\,\right]}\xspace}
+
+% Quantity styling
+\newcommand{\Qty}[2]{\oldstylenums{\qty[number-mode=text]{#1}{#2}}}
 %----------------------------- Setup math mode modifications -------------------
 
 
 %----------------------------- Other packages ----------------------------------
-\usepackage{latexsym}
-\usepackage{lmodern}
 \usepackage{setspace}
-\renewcommand{\familydefault}{\sfdefault}
+\usepackage{latexsym}
+
 %----------------------------- Other packages ----------------------------------
 
 
@@ -124,7 +170,7 @@ padding-bottom=6mm
 \raggedsection#3~\\[2mm]\Large\textbf{#4}%
 \end{longfbox}%
 \end{adjustwidth}%
-}{\hangfrom{\hskip #2#3}{#4}}
+}{\@hangfrom{\hskip #2#3}{#4}}
 }
 
 \addtokomafont{disposition}{\normalfont}
@@ -133,10 +179,10 @@ padding-bottom=6mm
 \addtokomafont{section}{\sffamily\bfseries\Large}
 \addtokomafont{subsection}{\bfseries}
 \addtokomafont{subsubsection}{\bfseries}
-\addtokomafont{paragraph}{\scshape\small}
-\addtokomafont{subparagraph}{\scshape\small}
+\addtokomafont{paragraph}{\normalfont}
+\addtokomafont{subparagraph}{\normalfont}
 
-\renewcommand*{\thesection}{\textsc{\textsf{\LARGE Problem~\arabic{section}:}}}
+\renewcommand*{\thesection}{\LARGE\textsc{Problem}~\arabic{section}:}
 \renewcommand*{\thesubsection}{\arabic{section}~(\alph{subsection}):}
 \renewcommand*{\thesubsubsection}{\arabic{section}~(\alph{subsubsection})~(\Roman{subsubsection}):}
 \RedeclareSectionCommands[beforeskip=-3ex,afterskip=2ex]{section,subsection,subsubsection}
@@ -180,7 +226,13 @@ on\\[1cm]
 }
 
 \newcommand{\Problem}[1]{%
-\clearpage\newgeometry{bottom=20mm,left=20mm,right=20mm,top=3mm}%\afterpage{\restoregeometry}
-\section{#1}}%
+\clearpage%
+\newgeometry{bottom=20mm,left=20mm,right=20mm,top=3mm}%
+\section{#1}%
+%\afterpage{\restoregeometry}
+}%
+
 \newcommand{\SubProblem}[1]{\subsection{\HomeworkText{#1}}}%
-\newcommand{\SubSubProblem}[2]{\subsubsection{\HomeworkText{#1}}}%
+
+\newcommand{\SubSubProblem}[1]{\subsubsection{\HomeworkText{#1}}}%
+
